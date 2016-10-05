@@ -24,6 +24,7 @@ Created by: Joao Trevizoli Esteves
 #include "StationRTC.hpp"
 #include "DS18B20.hpp"
 #include "SoilMoisture.hpp"
+#include "Photoresistor.hpp"
 #include "SDCard.hpp"
 // -----------------------------------------------//
 
@@ -41,6 +42,8 @@ public:
   ClimateDataLogger(DHT &dht22_1,
     DHT &dht22_2, DS18b20 &ds18b20sensor,
     SoilMoisture &soilMoistureSensor,
+    Photoresistor &photoresistorSensor_1,
+    Photoresistor &photoresistorSensor_2,
     StationRtc &rtc,
     SDCard &card);
   void begin();
@@ -55,12 +58,16 @@ private:
   float dht_2Humid;
   float ds18b20Temp;
   float soilMoisture;
+  int luminosity_1;
+  int luminosity_2;
 
   uint32_t logTime;
   DHT dht_1;
   DHT dht_2;
   DS18b20 ds18b20sensor;
   SoilMoisture soilMoistureSensor;
+  Photoresistor photoresistorSensor_1;
+  Photoresistor photoresistorSensor_2;
   StationRtc rtc;
   SDCard card;
   void resetArduino(uint8_t resetPin);

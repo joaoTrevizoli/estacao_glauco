@@ -13,7 +13,7 @@ Created by: João Trevizoli Esteves
 #include "DS18b20.hpp"
 #include "SoilMoisture.hpp"
 #include "SDCard.hpp"
-
+#include "Photoresistor.hpp"
 
 // -------------------------defines------------------------------------------ //
 
@@ -43,8 +43,11 @@ SoilMoisture soilMoist(MOISTURE_PIN);
 
 SDCard SD(4);
 
-ClimateDataLogger climateDataLogger(dht22_1, dht22_2,
-   ds18b20, soilMoist, rtc, SD);
+Photoresistor photoresistor_1(LIGHT_SENSOR_1);
+Photoresistor photoresistor_2(LIGHT_SENSOR_2);
+
+ClimateDataLogger climateDataLogger(dht22_1, dht22_2, ds18b20, soilMoist, photoresistor_1, photoresistor_2, rtc, SD);
+
 
 
 // -------------------------setup-------------------------------------------- //

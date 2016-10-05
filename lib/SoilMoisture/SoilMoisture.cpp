@@ -9,7 +9,6 @@ Implementation of the Soil Moisture Sensor
 
 Created by: Barbara Panosso and João Trevizoli Esteves
 */
-
 #include "SoilMoisture.hpp"
 
 // -------------------------Init method-------------------------------------- //

@@ -15,12 +15,16 @@ ClimateDataLogger::ClimateDataLogger(DHT &dht22_1,
   DHT &dht22_2,
   DS18b20 &ds18b20sensor,
   SoilMoisture &soilMoistureSensor,
+  Photoresistor &photoresistorSensor_1,
+  Photoresistor &photoresistorSensor_2,
   StationRtc &rtc,
   SDCard &card):
   dht_1(dht22_1),
   dht_2(dht22_2),
   ds18b20sensor(ds18b20sensor),
   soilMoistureSensor(soilMoistureSensor),
+  photoresistorSensor_1(photoresistorSensor_1),
+  photoresistorSensor_2(photoresistorSensor_2),
   rtc(rtc),
   card(card)
 {
@@ -64,10 +68,9 @@ void ClimateDataLogger::save()
       Serial.print(" Soil Moisture: ");
       Serial.println(this->soilMoisture);
     #endif
-    // Serial.println(this->rtc.dateTimeNow());
-    this->card.logData(this->dht_1Temp,
+    this->card.logData(this->rtc.dateTimeNow(), this->dht_1Temp,
     this->dht_2Temp, this->dht_1Humid, this->dht_2Humid,
-    this->ds18b20Temp, this->soilMoisture);
+    this->ds18b20Temp, this->soilMoisture, this->luminosity_1, this->luminosity_2);
   }
 }
 
@@ -81,6 +84,8 @@ void ClimateDataLogger::update()
   this->dht_2Humid = this->dht_2.readHumidity();
   this->ds18b20Temp = this->ds18b20sensor.getTemperature();
   this->soilMoisture =  static_cast<float>(this->soilMoistureSensor.rawHumidity());
+  this->luminosity_1 = this->photoresistorSensor_1.rawLuminosity();
+  this->luminosity_2 = this->photoresistorSensor_2.rawLuminosity();
 }
 
 // -----------------------------------------------//

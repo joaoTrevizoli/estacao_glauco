@@ -27,9 +27,10 @@ public:
   SDCard(const uint8_t chipSelectPin);
   void begin();
   void stop();
-  void logData(float dht_1Temp, float dht_2Temp,
+  void logData(String data, float dht_1Temp, float dht_2Temp,
     float dht_1Humid, float dht_2Humid,
-    float ds18b20Temp, float soilMoisture);
+    float ds18b20Temp, float soilMoisture,
+    float luminosity_1, float luminosity_2);
 
 private:
   uint8_t chipPin;

@@ -77,16 +77,18 @@ void SDCard::openFile()
 // -----------------------------------------------//
 void SDCard::csvHeader()
 {
-  logFile.println(F("dht22_1 Temperature, dht22_2 Temperature, dht22_1 Humidity, dht22_3 Humidity, ds18b20 Temperature, Soil Moisture"));
+  logFile.println(F("Data, dht22_1 Temperature, dht22_2 Temperature, dht22_1 Humidity, dht22_3 Humidity, ds18b20 Temperature, Soil Moisture, luminosity_1, luminosity_2"));
   logFile.sync();
 
 }
 // -----------------------------------------------//
-void SDCard::logData(float dht_1Temp, float dht_2Temp,
+void SDCard::logData(String data, float dht_1Temp, float dht_2Temp,
   float dht_1Humid, float dht_2Humid,
-  float ds18b20Temp, float soilMoisture)
+  float ds18b20Temp, float soilMoisture,
+  float luminosity_1, float luminosity_2)
 {
-
+    logFile.print(data);
+    logFile.write(',');
     logFile.print(dht_1Temp);
     logFile.write(',');
     logFile.print(dht_2Temp);
@@ -98,6 +100,10 @@ void SDCard::logData(float dht_1Temp, float dht_2Temp,
     logFile.print(ds18b20Temp);
     logFile.write(',');
     logFile.print(soilMoisture);
+    logFile.write(',');
+    logFile.print(luminosity_1);
+    logFile.write(',');
+    logFile.print(luminosity_2);
     logFile.println();
 
     if (!logFile.sync() || logFile.getWriteError())
