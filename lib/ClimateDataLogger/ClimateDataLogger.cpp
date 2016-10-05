@@ -11,14 +11,18 @@ Implementation of the climate datalogger object
 
 #include "ClimateDataLogger.hpp"
 
-ClimateDataLogger::ClimateDataLogger(DHT &dht22_1, DHT &dht22_2,
-  LiquidCrystal_I2C& lcdS, StationRtc &rtc,
-  uint8_t csPin, uint8_t greenLed, uint8_t redLed):
+ClimateDataLogger::ClimateDataLogger(DHT &dht22_1,
+  DHT &dht22_2,
+  DS18b20 &ds18b20sensor,
+  SoilMoisture &soilMoistureSensor,
+  StationRtc &rtc,
+  SDCard &card):
   dht_1(dht22_1),
   dht_2(dht22_2),
-  lcd(lcdS),
-  r(rtc),
-  ledPins{greenLed, redLed}
+  ds18b20sensor(ds18b20sensor),
+  soilMoistureSensor(soilMoistureSensor),
+  rtc(rtc),
+  card(card)
 {
 
 }
@@ -27,13 +31,12 @@ ClimateDataLogger::ClimateDataLogger(DHT &dht22_1, DHT &dht22_2,
 
 void ClimateDataLogger::begin()
 {
-  for (size_t i = 0; i < N_LEDS; i++)pinMode(ledPins[i], OUTPUT);
   this->dht_1.begin();
   this->dht_2.begin();
-  this->lcd.init();
-  this->lcd.setBacklight(HIGH);
-  this->lcd.clear();
-  this->r.begin();
+  this->ds18b20sensor.begin();
+  this->soilMoistureSensor.begin();
+  this->rtc.begin();
+  this->card.begin();
   this->logTime = SAMPLE_INTERVAL_MS;
 }
 
@@ -45,50 +48,39 @@ void ClimateDataLogger::save()
   uint32_t currentMillis = millis();
   if(currentMillis - this->logTime > SAMPLE_INTERVAL_MS)
   {
-    digitalWrite(this->ledPins[0], HIGH);
-    this->logTime = currentMillis - 1;
-    this->readTemp(), this->readHum();
+    this->logTime = millis();
+    this->update();
+    #if CLIMATEDATALOGGER_DEBUG == 1
+      Serial.print("DHT 1 temp: ");
+      Serial.print(this->dht_1Temp);
+      Serial.print(" DHT 2 temp: ");
+      Serial.print(this->dht_2Temp);
+      Serial.print(" DHT 1 Humid: ");
+      Serial.print(this->dht_1Humid);
+      Serial.print(" DHT 2 Humid: ");
+      Serial.print(this->dht_2Humid);
+      Serial.print(" DS18b20 Temp: ");
+      Serial.print(this->ds18b20Temp);
+      Serial.print(" Soil Moisture: ");
+      Serial.println(this->soilMoisture);
+    #endif
+    // Serial.println(this->rtc.dateTimeNow());
+    this->card.logData(this->dht_1Temp,
+    this->dht_2Temp, this->dht_1Humid, this->dht_2Humid,
+    this->ds18b20Temp, this->soilMoisture);
   }
 }
 
 // -----------------------------------------------//
 
-float ClimateDataLogger::readTemp()
+void ClimateDataLogger::update()
 {
-  float temp = this->dht_1.readTemperature();
-  this->lcd.setCursor(0, 0);
-  if (this->lastTemp > temp)
-  {
-    for (size_t i = 0; i < 16; i++)
-    {
-      this->lcd.print(" ");
-    }
-    this->lcd.setCursor(0, 0);
-  }
-  this->lcd.print(temp);
-  this->lcd.print(" *C");
-  this->lastTemp = temp;
-  return temp;
-}
-
-// -----------------------------------------------//
-
-float ClimateDataLogger::readHum()
-{
-  float humid = this->dht_1.readHumidity();
-  this->lcd.setCursor(0, 1);
-  if (this->lastHumid > humid)
-  {
-    for (size_t i = 0; i < 16; i++)
-    {
-      lcd.print(" ");
-    }
-    lcd.setCursor(0, 1);
-  }
-  this->lcd.print(humid);
-  this->lcd.print(" %");
-  this->lastHumid = humid;
-  return humid;
+  this->dht_1Temp = this->dht_1.readTemperature();
+  this->dht_2Temp = this->dht_2.readTemperature();
+  this->dht_1Humid = this->dht_1.readHumidity();
+  this->dht_2Humid = this->dht_2.readHumidity();
+  this->ds18b20Temp = this->ds18b20sensor.getTemperature();
+  this->soilMoisture =  static_cast<float>(this->soilMoistureSensor.rawHumidity());
 }
 
 // -----------------------------------------------//

@@ -19,14 +19,13 @@ Created by: Joao Trevizoli Esteves
  #include "Arduino.h"
 #endif
 #include <RTClib.h>
-#include "Format.h"
 
 // -------------------------Class Interface---------------------------------- //
 
 class StationRtc
 {
 public:
-  StationRtc();
+  StationRtc(RTC_DS1307 &rtc);
   void begin();
   String dateTimeNow();
 private:

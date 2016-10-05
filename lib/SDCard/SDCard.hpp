@@ -27,13 +27,13 @@ public:
   SDCard(const uint8_t chipSelectPin);
   void begin();
   void stop();
-  void logData(String date, float temp, float humid);
+  void logData(float dht_1Temp, float dht_2Temp,
+    float dht_1Humid, float dht_2Humid,
+    float ds18b20Temp, float soilMoisture);
 
 private:
   uint8_t chipPin;
   #define error(msg) sd.errorHalt(F(msg))
-  SdFat sd;
-  SdFile logFile;
   void openFile();
   void csvHeader();
 

@@ -12,8 +12,8 @@ Created by: Joao Trevizoli Esteves
 
 #include "StationRTC.hpp"
 
-StationRtc::StationRtc():
-  rtc()
+StationRtc::StationRtc(RTC_DS1307 &rtc):
+  rtc(rtc)
 {
 
 }

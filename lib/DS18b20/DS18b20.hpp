@@ -45,7 +45,7 @@ private:
   void printAddress(DeviceAddress deviceAddress);
   bool checkSensor();
   bool setTemperature();
-  bool update();
+  void update();
 
   bool debuging;
   uint8_t one_wire_b;
@@ -53,7 +53,6 @@ private:
   uint32_t previousUpdate;
   float temperature;
 
-  // OneWire *oneWirePtr;
   DallasTemperature sensors;
   DeviceAddress thermometerAddr;
 

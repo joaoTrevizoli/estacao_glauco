@@ -22,8 +22,14 @@ Created by: Joao Trevizoli Esteves
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include "StationRTC.hpp"
+#include "DS18B20.hpp"
+#include "SoilMoisture.hpp"
+#include "SDCard.hpp"
 // -----------------------------------------------//
 
+#define CLIMATEDATALOGGER_DEBUG 1
+
+// -----------------------------------------------//
 const uint32_t SAMPLE_INTERVAL_MS = 2000;
 const size_t N_LEDS = 2;
 
@@ -32,24 +38,31 @@ const size_t N_LEDS = 2;
 class ClimateDataLogger
 {
 public:
-  ClimateDataLogger(DHT &dht22_1, DHT &dht22_2, LiquidCrystal_I2C &lcd,
-    StationRtc &rtc, uint8_t csPin,
-    uint8_t greenLed, uint8_t redLed);
+  ClimateDataLogger(DHT &dht22_1,
+    DHT &dht22_2, DS18b20 &ds18b20sensor,
+    SoilMoisture &soilMoistureSensor,
+    StationRtc &rtc,
+    SDCard &card);
   void begin();
   void save();
-  float readTemp();
-  float readHum();
+  void update();
 
 
 private:
-  float lastTemp;
-  float lastHumid;
+  float dht_1Temp;
+  float dht_2Temp;
+  float dht_1Humid;
+  float dht_2Humid;
+  float ds18b20Temp;
+  float soilMoisture;
+
   uint32_t logTime;
   DHT dht_1;
   DHT dht_2;
-  LiquidCrystal_I2C lcd;
-  StationRtc r;
-  uint8_t ledPins[N_LEDS];
+  DS18b20 ds18b20sensor;
+  SoilMoisture soilMoistureSensor;
+  StationRtc rtc;
+  SDCard card;
   void resetArduino(uint8_t resetPin);
 
 };

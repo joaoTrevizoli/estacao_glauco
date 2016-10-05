@@ -119,7 +119,7 @@ bool DS18b20::setTemperature()
 }
 
 // -------------------------------------------------------------------------- //
-bool DS18b20::update()
+void DS18b20::update()
 {
   if ((millis() - this->previousUpdate > updateInterval) ||
    this->temperature == NAN)

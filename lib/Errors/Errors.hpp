@@ -21,8 +21,6 @@ Created by: Barbara Panosso
  #include "WProgram.h"
 #endif
 
-#include <EEPROM.h>
-
 // -----------------------------------------------//
 
 class Errors

@@ -12,12 +12,12 @@ Created by: Joao Trevizoli Esteves
 
 #include "SDCard.hpp"
 
+SdFat sd;
+SdFile logFile;
 
 // -----------------------------------------------//
 
-SDCard::SDCard(const uint8_t pinSaving):
-sd(),
-logFile()
+SDCard::SDCard(const uint8_t pinSaving)
 {
   chipPin = pinSaving;
 }
@@ -25,19 +25,20 @@ logFile()
 void SDCard::begin()
 {
   pinMode(this->chipPin, OUTPUT);
-  while(!this->sd.begin(this->chipPin, SPI_HALF_SPEED))
+  while(!sd.begin(this->chipPin, SPI_HALF_SPEED))
   {
-    Serial.println("Insira o Cartao!");
+    Serial.println("Insert the sd card!");
     delay(500);
   }
   this->openFile();
   this->csvHeader();
+
 }
 // -----------------------------------------------//
 void SDCard::stop()
 {
-  this->logFile.sync();
-  this->logFile.close();
+  logFile.sync();
+  logFile.close();
 }
 // -----------------------------------------------//
 
@@ -49,7 +50,7 @@ void SDCard::openFile()
   if (BASE_NAME_SIZE > 6) {
     error("FILE_BASE_NAME too long");
   }
-  while (this->sd.exists(fileName))
+  while (sd.exists(fileName))
   {
     if (fileName[BASE_NAME_SIZE + 1] != '9')
     {
@@ -65,27 +66,39 @@ void SDCard::openFile()
       error("Can't create file name");
     }
   }
-  if (!this->logFile.open(fileName, O_CREAT | O_WRITE | O_EXCL))
+  if (!logFile.open(fileName, O_CREAT | O_WRITE | O_EXCL))
   {
     error("file.open");
   }
   Serial.print("Saving at ");
   Serial.println(fileName);
+
 }
 // -----------------------------------------------//
 void SDCard::csvHeader()
 {
-  this->logFile.println(F("Data, Temperatura, Umidade"));
+  logFile.println(F("dht22_1 Temperature, dht22_2 Temperature, dht22_1 Humidity, dht22_3 Humidity, ds18b20 Temperature, Soil Moisture"));
+  logFile.sync();
+
 }
 // -----------------------------------------------//
-void SDCard::logData(String date, float temp, float humid)
+void SDCard::logData(float dht_1Temp, float dht_2Temp,
+  float dht_1Humid, float dht_2Humid,
+  float ds18b20Temp, float soilMoisture)
 {
-    this->logFile.print(date);
-    this->logFile.write(',');
-    this->logFile.print(temp);
-    this->logFile.write(',');
-    this->logFile.print(humid);
-    this->logFile.println();
+
+    logFile.print(dht_1Temp);
+    logFile.write(',');
+    logFile.print(dht_2Temp);
+    logFile.write(',');
+    logFile.print(dht_1Humid);
+    logFile.write(',');
+    logFile.print(dht_2Humid);
+    logFile.write(',');
+    logFile.print(ds18b20Temp);
+    logFile.write(',');
+    logFile.print(soilMoisture);
+    logFile.println();
 
     if (!logFile.sync() || logFile.getWriteError())
     {
