@@ -26,12 +26,8 @@ Created by: João Trevizoli Esteves
 #define LIGHT_SENSOR_2 A2
 
 // -------------------------Object Instatiating------------------------------ //
-RTC_DS1307 r;
-StationRtc rtc(r);
-
 DHT dht22_1(DHT_PIN_1, DHT22);
 DHT dht22_2(DHT_PIN_2, DHT22);
-
 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature ds18b20Sensor(&oneWire);
@@ -41,10 +37,12 @@ DS18b20 ds18b20(ds18b20Sensor, 500);
 
 SoilMoisture soilMoist(MOISTURE_PIN);
 
-SDCard SD(4);
+SDCard SD(CS_PIN);
 
 Photoresistor photoresistor_1(LIGHT_SENSOR_1);
 Photoresistor photoresistor_2(LIGHT_SENSOR_2);
+
+StationRtc rtc;
 
 ClimateDataLogger climateDataLogger(dht22_1, dht22_2, ds18b20, soilMoist, photoresistor_1, photoresistor_2, rtc, SD);
 
@@ -54,15 +52,15 @@ ClimateDataLogger climateDataLogger(dht22_1, dht22_2, ds18b20, soilMoist, photor
 
 void setup()
 {
-  Serial.begin(9600);
-  climateDataLogger.begin();
+    Serial.begin(9600);
+    climateDataLogger.begin();
 }
 
 // -------------------------loop--------------------------------------------- //
 
 void loop()
 {
-  climateDataLogger.save();
+    climateDataLogger.save();
 }
 
 // -------------------------end of main-------------------------------------- //

@@ -22,7 +22,7 @@ Created by: Joao Trevizoli Esteves
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include "StationRTC.hpp"
-#include "DS18B20.hpp"
+#include "DS18b20.hpp"
 #include "SoilMoisture.hpp"
 #include "Photoresistor.hpp"
 #include "SDCard.hpp"

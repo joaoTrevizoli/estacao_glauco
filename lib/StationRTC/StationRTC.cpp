@@ -12,13 +12,14 @@ Created by: Joao Trevizoli Esteves
 
 #include "StationRTC.hpp"
 
-StationRtc::StationRtc(RTC_DS1307 &rtc):
-  rtc(rtc)
+// -------------------------Init method-------------------------------------- //
+StationRtc::StationRtc():
+  rtc()
 {
 
 }
 
-// -----------------------------------------------//
+// -------------------------Public methods----------------------------------- //
 
 void StationRtc::begin()
 {
@@ -35,26 +36,26 @@ String StationRtc::formatDateTime(int n)
   return digits;
 }
 
-// -----------------------------------------------//
+// ---------------------------------------------------------------------------//
 
 String StationRtc::dateTimeNow()
 {
-  if(!this->rtc.isrunning())
+    if(!this->rtc.isrunning())
   {
-    this->rtc.begin();
-    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-    return "RTC parado";
+      this->rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+      this->rtc.begin();
+      return "RTC parado";
   }
+    DateTime timeStamp = rtc.now();
 
-  DateTime timeStamp = rtc.now();
-  String fmtDateTime = String(timeStamp.year()) + "-";
-  fmtDateTime = fmtDateTime + this->formatDateTime(timeStamp.month()) + "-";
-  fmtDateTime = fmtDateTime + this->formatDateTime(timeStamp.day()) + "T";
+    String fmtDateTime = String(timeStamp.year()) + "-";
+    fmtDateTime = fmtDateTime + this->formatDateTime(timeStamp.month()) + "-";
+    fmtDateTime = fmtDateTime + this->formatDateTime(timeStamp.day()) + "T";
 
-  fmtDateTime = fmtDateTime + this->formatDateTime(timeStamp.hour()) + ":";
-  fmtDateTime = fmtDateTime + this->formatDateTime(timeStamp.minute()) + ":";
-  fmtDateTime = fmtDateTime + this->formatDateTime(timeStamp.second());
-  return fmtDateTime;
+    fmtDateTime = fmtDateTime + this->formatDateTime(timeStamp.hour()) + ":";
+    fmtDateTime = fmtDateTime + this->formatDateTime(timeStamp.minute()) + ":";
+    fmtDateTime = fmtDateTime + this->formatDateTime(timeStamp.second());
+    return fmtDateTime;
 }
 
 

@@ -35,13 +35,13 @@ ClimateDataLogger::ClimateDataLogger(DHT &dht22_1,
 
 void ClimateDataLogger::begin()
 {
-  this->dht_1.begin();
-  this->dht_2.begin();
-  this->ds18b20sensor.begin();
-  this->soilMoistureSensor.begin();
-  this->rtc.begin();
-  this->card.begin();
-  this->logTime = SAMPLE_INTERVAL_MS;
+    this->dht_1.begin();
+    this->dht_2.begin();
+    this->ds18b20sensor.begin();
+//    this->rtc.begin();
+    this->soilMoistureSensor.begin();
+//  this->card.begin();
+    this->logTime = SAMPLE_INTERVAL_MS;
 }
 
 
@@ -66,11 +66,14 @@ void ClimateDataLogger::save()
       Serial.print(" DS18b20 Temp: ");
       Serial.print(this->ds18b20Temp);
       Serial.print(" Soil Moisture: ");
-      Serial.println(this->soilMoisture);
+      Serial.print(this->soilMoisture);
+      Serial.print(" Datetime: ");
+      String hora = this->rtc.dateTimeNow();
+      Serial.println(hora);
     #endif
-    this->card.logData(this->rtc.dateTimeNow(), this->dht_1Temp,
-    this->dht_2Temp, this->dht_1Humid, this->dht_2Humid,
-    this->ds18b20Temp, this->soilMoisture, this->luminosity_1, this->luminosity_2);
+//    this->card.logData(this->rtc.dateTimeNow(), this->dht_1Temp,
+//    this->dht_2Temp, this->dht_1Humid, this->dht_2Humid,
+//    this->ds18b20Temp, this->soilMoisture, this->luminosity_1, this->luminosity_2);
   }
 }
 

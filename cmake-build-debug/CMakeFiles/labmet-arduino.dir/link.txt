@@ -1,0 +1,1 @@
+/home/joao/.platformio/packages/toolchain-atmelavr/bin/avr-g++   -g   CMakeFiles/labmet-arduino.dir/src/main.cpp.o  -o labmet-arduino -rdynamic 
