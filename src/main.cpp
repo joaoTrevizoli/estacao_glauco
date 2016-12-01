@@ -19,7 +19,7 @@ Created by: João Trevizoli Esteves
 
 #define DHT_PIN_1 3
 #define DHT_PIN_2 2
-#define CS_PIN 4
+#define CS_PIN 53
 #define ONE_WIRE_BUS 5
 #define MOISTURE_PIN A0
 #define LIGHT_SENSOR_1 A1
