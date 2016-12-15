@@ -67,6 +67,10 @@ void ClimateDataLogger::save()
       Serial.print(this->ds18b20Temp);
       Serial.print(" Soil Moisture: ");
       Serial.print(this->soilMoisture);
+      Serial.print(" luminosity 1: ");
+      Serial.print(this->luminosity_1);
+      Serial.print(" luminosity 2: ");
+      Serial.print(this->luminosity_2);
       Serial.print(" Datetime: ");
       String hora = this->rtc.dateTimeNow();
       Serial.println(hora);
